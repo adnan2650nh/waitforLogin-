@@ -1,0 +1,21 @@
+    Else
+            Sleep($maxtime / 100)
+        EndIf
+        If TimerDiff($timeout) > $maxtime Then ExitLoop
+    WEnd
+    If $LatTest = 0 Then GUICtrlSetData($msgdisplay, 'GPS Timeout')
+    Return ($return)
+EndFunc;==>_GetGPS
+
+Func _GetGpsData($GpsData);Read GPS Receiver Data
+    GUICtrlSetData($msgdisplay, $GpsData)
+    $data = StringSplit($GpsData, ",")
+    If $data[0] > 9 Then
+        $lat = StringSplit($data[3], ".")
+        $lon = StringSplit($data[5], ".")
+        If _ArrayMax($lat, 0, 1) >= 2 And _ArrayMax($lat, 0, 1) >= 2 Then
+;Convert to Min/Sec to Decimal Latitude
+            $latD = StringMid((StringRight($lat[1], 2) & "." & StringRight($lat[2], 4)) / 60, 2, 10)
+;Convert to Min/Sec to Decimal Longitude
+            $lonD = StringMid((StringRight($lon[1], 2) & "." & StringRight($lon[2], 4)) / 60, 2, 10)
+;Set Location Variables
